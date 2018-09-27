@@ -8,6 +8,10 @@ class App extends Component {
         super(props);
         this.state = { 
             volume : null,
+            furtherSteps: [],
+            emotion: null,
+            unMountKid : false,
+            judgeLeave: false
          };
     }
 
@@ -16,14 +20,41 @@ class App extends Component {
             volume : 5,
         })
     }
+    
+    judgeLeave(boolean){
+        console.log(boolean)
+        this.setState({
+            judgeLeave : boolean
+        })
+    }
 
+    sendDataToKid() {
+        this.setState({
+            furtherSteps : ['step3', 'step4', 'step5']
+        })
+    }
+
+    applaud() {
+        this.setState({
+            emotion : 'happy',
+        })
+        //Send this applaud status to Kid.js
+    }
+
+
+    
 
     render() {
+        const {unMountKid} = this.state;
+
         return (
             <div>
-                <Kid dressColor={'Teal'}/>
-                <Teacher /> 
-                <Judge />
+                {!unMountKid &&<Kid dressColor={'Teal'} furtherSteps={this.state.furtherSteps} emotion={this.state.emotion} />}
+                <Teacher sendDataToKid={this.sendDataToKid.bind(this)}/> 
+                <Judge judgesApplaud={this.applaud.bind(this)}/>
+
+
+                <button className="btn btn-success" onClick={() => this.setState({unMountKid : true})}>Ask the Kid to Leave the Show</button>
             </div>
         );
     }
