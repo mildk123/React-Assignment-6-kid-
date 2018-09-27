@@ -1,13 +1,12 @@
 import React from 'react';
 
 export default class Teacher extends React.Component {
-    sendDataToKid() {
-        const furtherSteps = ['step3', 'step4', 'step5']
-        //Send this data to Kid.js
-    }
+
+
     render() {
+        const {sendDataToKid} = this.props;
         return (
-            <button className="btn btn-outline-danger" onClick={this.sendDataToKid}>Get Help From Teacher</button>
+            <button className="btn btn-outline-danger" onClick={sendDataToKid}>Get Help From Teacher</button>
         );
     }
 }
