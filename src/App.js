@@ -1,61 +1,99 @@
 import React, { Component } from 'react';
-import Kid from './Components/Kid';
-import Teacher from './Components/Teacher';
-import Judge from './Components/Judge';
+import Kid from './Components/Kid/Kid';
+import Teacher from './Components/Teacher/Teacher';
+import Judge from './Components/Judge/Judge';
 
 class App extends Component {
     constructor(props) {
+
         super(props);
-        this.state = { 
-            volume : null,
+        this.state = {
             furtherSteps: [],
             emotion: null,
-            unMountKid : false,
-            judgeLeave: false
-         };
+            unMountKid: false,
+            judgeLeave: false,
+            kidQualified: false,
+            showLeaveBtn: false,
+        };
+
     }
 
-    ComponentWillMount(){
-        this.setState({
-            volume : 5,
-        })
+    static getDerivedStateFromProps() {
+
+        return {
+            volume: 5,
+        }
+
     }
-    
-    judgeLeave(boolean){
-        console.log(boolean)
+
+
+    judgeLeave() {
         this.setState({
-            judgeLeave : boolean
+            judgeLeave: true
         })
     }
 
-    sendDataToKid() {
+    updateSteps(furtherSteps) {
         this.setState({
-            furtherSteps : ['step3', 'step4', 'step5']
+            furtherSteps: furtherSteps
         })
+
     }
 
-    applaud() {
+    emotionUpdate() {
         this.setState({
-            emotion : 'happy',
+            emotion: 'happy',
         })
         //Send this applaud status to Kid.js
     }
 
 
-    
+    endPerformnce() {
+        this.setState({
+            kidQualified: true,
+            showLeaveBtn: true
+        })
+
+    }
+
+
+
+
 
     render() {
-        const {unMountKid} = this.state;
+        const { unMountKid, judgeLeave, showLeaveBtn } = this.state;
+
+        if (judgeLeave) {
+            return <div></div>
+        }
 
         return (
             <div>
-                {!unMountKid &&<Kid dressColor={'Teal'} furtherSteps={this.state.furtherSteps} emotion={this.state.emotion} />}
-                <Teacher sendDataToKid={this.sendDataToKid.bind(this)}/> 
-                <Judge judgesApplaud={this.applaud.bind(this)}/>
+                {!unMountKid && <Kid
+                    dressColor={'turquoise'}
+                    furtherSteps={this.state.furtherSteps}
+                    emotion={this.state.emotion}
+                    kidQualified={this.state.kidQualified}
+                    judgeLeave={() => this.judgeLeave()}
+                    volume={this.state.volume}
+                />}
+                <hr />
+                <Teacher
+                    updateSteps={(furtherSteps) => this.updateSteps(furtherSteps)} />
+
+                <hr />
+
+                <Judge
+                    emotionUpdate={this.emotionUpdate.bind(this)}
+                    endPerformnce={() => this.endPerformnce()}
+                />
 
 
-                <button className="btn btn-success" onClick={() => this.setState({unMountKid : true})}>Ask the Kid to Leave the Show</button>
+                <hr />
+                {showLeaveBtn && <button className="btn badge-danger offset-6 " onClick={() => this.setState({ unMountKid: true })}>| X | Leave</button>}
             </div>
+
+
         );
     }
 }
